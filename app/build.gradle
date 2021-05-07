@@ -30,6 +30,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -48,6 +51,10 @@ dependencies {
     implementation 'org.koin:koin-android-scope:2.2.2'
     implementation 'org.koin:koin-android-ext:2.2.2'
     implementation 'org.koin:koin-androidx-fragment:2.2.2'
+
+    // Jetpack Navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
