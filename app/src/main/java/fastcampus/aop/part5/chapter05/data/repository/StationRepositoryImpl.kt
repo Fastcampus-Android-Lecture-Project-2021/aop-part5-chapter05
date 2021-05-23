@@ -4,6 +4,7 @@ import fastcampus.aop.part5.chapter05.data.api.StationApi
 import fastcampus.aop.part5.chapter05.data.api.StationArrivalsApi
 import fastcampus.aop.part5.chapter05.data.api.response.mapper.toArrivalInformation
 import fastcampus.aop.part5.chapter05.data.db.StationDao
+import fastcampus.aop.part5.chapter05.data.db.entity.mapper.toStationEntity
 import fastcampus.aop.part5.chapter05.data.db.entity.mapper.toStations
 import fastcampus.aop.part5.chapter05.data.preference.PreferenceManager
 import fastcampus.aop.part5.chapter05.domain.ArrivalInformation
@@ -26,7 +27,7 @@ class StationRepositoryImpl(
     override val stations: Flow<List<Station>> =
         stationDao.getStationWithSubways()
             .distinctUntilChanged()
-            .map { it.toStations() }
+            .map { stations -> stations.toStations().sortedByDescending { it.isFavorited } }
             .flowOn(dispatcher)
 
     override suspend fun refreshStations() = withContext(dispatcher) {
@@ -47,6 +48,10 @@ class StationRepositoryImpl(
             ?.distinctBy { it.direction }
             ?.sortedBy { it.subway }
             ?: throw RuntimeException("도착 정보를 불러오는 데에 실패했습니다.")
+    }
+
+    override suspend fun updateStation(station: Station) = withContext(dispatcher) {
+        stationDao.updateStation(station.toStationEntity())
     }
 
     companion object {

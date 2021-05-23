@@ -33,4 +33,10 @@ class StationArrivalsPresenter(
             }
         }
     }
+
+    override fun toggleStationFavorite() {
+        scope.launch {
+            stationRepository.updateStation(station.copy(isFavorited = !station.isFavorited))
+        }
+    }
 }
